@@ -1,0 +1,145 @@
+
+<div class="container">
+
+    <button mat-raised-button (click)="generateTables()">Generate tables</button>
+    <button mat-raised-button (click)="tables = false">Go to another page</button>
+    
+    <div *ngIf="tables">
+    
+        <app-p-spinner class="progress" *ngIf="loadingGeneral; else accordion"></app-p-spinner>
+        
+        <ng-template class="containerHandsontable" #accordion>
+            <div class="accordionContent">
+                <mat-accordion multi>
+                    <!-- PARA LA FOTO ACTUAL -->
+                    <mat-expansion-panel [expanded]="true"  class="expansion">
+                        <mat-expansion-panel-header><mat-panel-title class="title">TABLE 1</mat-panel-title></mat-expansion-panel-header>
+                        
+                        <button *ngIf="readOnly " matTooltipPosition="after" (click)="editTable(true)"
+                            matTooltip="Editar tabla" class="btn-edit" mat-icon-button [disabled]="loadingTabla1 || disableToEdit  ">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button *ngIf="!readOnly" matTooltipPosition="after" matTooltip="Solo lectura"
+                            (click)="editTable(false)" class="btn-read" mat-icon-button>
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </button>
+                        <div >
+                            <!-- TABLA -->
+                            <div>
+                                <app-p-spinner *ngIf="loadingTabla1"></app-p-spinner>
+                                <div class="exeTable" *ngIf="!loadingTabla1 && !notFound1" >
+                                    <hot-table 
+                                    #T1
+                                    id="T1"
+                                    [colHeaders]="columnNames" 
+                                    [data]="tableData" 
+                                    [hotId]="tableId1"
+                                    [settings]="hotSettings1">                     
+            
+                                        <hot-column  *ngFor="let column of columnNames; let i = index" data="{{columnsToMap[i]}}"
+                                            [readOnly]="isReadOnly(column, tableId1)"  >
+                                        </hot-column>
+            
+                                    </hot-table>
+                                </div>
+                            </div>
+        
+                            
+                        </div>
+                    </mat-expansion-panel>
+        
+                    <!-- PARA LA TABLA DE INDICADORES DE LA FOTO ACTUAL -->
+                    <mat-expansion-panel class="expansion" >
+                        <mat-expansion-panel-header><mat-panel-title class="title">TABLE 4</mat-panel-title></mat-expansion-panel-header>
+        
+                         <!-- TABLA -->
+                         <div>
+                            <app-p-spinner *ngIf="table4Loading"></app-p-spinner>
+                            <div class="exeTable2" *ngIf="!table4Loading && table1Existe"  (scroll)="onScroll()">
+                                <hot-table 
+                                #T4
+                                [colHeaders]="columnNames4" 
+                                [data]="tablaData4" 
+                                [hotId]="tableId4"
+                                [settings]="hotSettings4">
+        
+                                    <hot-column *ngFor="let column of columnNames4; let i = index" data="{{columnsToMap4[i]}}"></hot-column>
+        
+                                </hot-table>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+        
+                    <!-- PARA LA TABLA DE DIFERENCIAS  -->
+                    <mat-expansion-panel class="expansion">
+                        
+                        <mat-expansion-panel-header><mat-panel-title class="title">TABLE 3</mat-panel-title></mat-expansion-panel-header>
+        
+                        <!-- TABLA -->
+                        <div>
+                            <app-p-spinner *ngIf="table3Loading"></app-p-spinner>
+                            <div class="exeTable" *ngIf="table3Ready && !table3Loading" >
+                                <hot-table
+                                #T3
+                                [data]="tablaData3"
+                                [colHeaders]="columnNames3"
+                                [settings]="hotSettings3">
+                                    <hot-column  *ngFor="let column of columnNames; let i = index" data="{{columnsToMap[i]}}"></hot-column>
+                                </hot-table>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+        
+                    <!-- PARA LA FOTO PREVIA -->
+                    <mat-expansion-panel class="expansion" *ngIf="table2Existe">
+                        <mat-expansion-panel-header><mat-panel-title class="title">TABLE 2</mat-panel-title></mat-expansion-panel-header>
+                        
+                       
+                        <!-- TABLA -->
+                        <div>
+                            <app-p-spinner *ngIf="loadingTabla2"></app-p-spinner>
+                            <div class="exeTable" *ngIf="!loadingTabla2 && !notFound2"  (scroll)="onScroll()">
+                                <hot-table 
+                                #T2
+                                [colHeaders]="columnNames2" 
+                                [data]="tableData2" 
+                                [hotId]="tableId2"
+                                [settings]="hotSettings2">
+        
+                                    <hot-column *ngFor="let column of columnNames2; let i = index" data="{{columnsToMap2[i]}}"></hot-column>
+        
+                                </hot-table>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+        
+                    <!-- PARA LA TABLA DE INDICADORES DE LA FOTO PREVIA -->
+                    <mat-expansion-panel class="expansion" *ngIf="table2Existe">
+                        <mat-expansion-panel-header><mat-panel-title class="title">TABLE 5</mat-panel-title></mat-expansion-panel-header>
+        
+                        <!-- TABLA -->
+                        <div>
+                            <app-p-spinner *ngIf="table5Loading"></app-p-spinner>
+                            <div class="exeTable2" *ngIf="!table5Loading && table2Existe"  (scroll)="onScroll()">
+                                <hot-table 
+                                #T5
+                                [colHeaders]="columnNames5" 
+                                [data]="tablaData5" 
+                                [hotId]="tableId5"
+                                [settings]="hotSettings5">
+        
+                                    <hot-column *ngFor="let column of columnNames5; let i = index" data="{{columnsToMap5[i]}}"></hot-column>
+        
+                                </hot-table>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+        
+                </mat-accordion>
+            </div>
+        </ng-template>
+    </div>
+    <div *ngIf="!tables">
+        <p>Another page</p>
+    </div>
+</div>
